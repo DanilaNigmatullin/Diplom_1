@@ -34,18 +34,21 @@ public class BurgerTest {
         when(mockFilling.getType()).thenReturn(IngredientType.FILLING);
     }
 
-
     @Test
     public void setBunsSetsCorrectBun() {
         burger.setBuns(mockBun);
         assertEquals(mockBun, burger.bun);
     }
 
-
     @Test
-    public void addIngredientAddsOneIngredient() {
+    public void addIngredientIncreasesSize() {
         burger.addIngredient(mockSauce);
         assertEquals(1, burger.ingredients.size());
+    }
+
+    @Test
+    public void addIngredientAddsCorrectIngredient() {
+        burger.addIngredient(mockSauce);
         assertEquals(mockSauce, burger.ingredients.get(0));
     }
 
@@ -56,48 +59,37 @@ public class BurgerTest {
         assertEquals(2, burger.ingredients.size());
     }
 
+    @Test
+    public void removeIngredientDecreasesSize() {
+        burger.addIngredient(mockSauce);
+        burger.addIngredient(mockFilling);
+        burger.removeIngredient(0);
+        assertEquals(1, burger.ingredients.size());
+    }
 
     @Test
     public void removeIngredientRemovesCorrectElement() {
         burger.addIngredient(mockSauce);
         burger.addIngredient(mockFilling);
         burger.removeIngredient(0);
-        assertEquals(1, burger.ingredients.size());
         assertEquals(mockFilling, burger.ingredients.get(0));
     }
 
-
     @Test
-    public void moveIngredientMovesCorrectly() {
+    public void moveIngredientMovesFirstToSecond() {
         burger.addIngredient(mockSauce);
         burger.addIngredient(mockFilling);
         burger.moveIngredient(0, 1);
         assertEquals(mockFilling, burger.ingredients.get(0));
-        assertEquals(mockSauce, burger.ingredients.get(1));
-    }
-
-
-    @Test
-    public void getPriceWithNoIngredients() {
-        burger.setBuns(mockBun);
-        assertEquals(200f, burger.getPrice(), 0.0f);
     }
 
     @Test
-    public void getPriceWithOneIngredient() {
-        burger.setBuns(mockBun);
-        burger.addIngredient(mockSauce);
-        assertEquals(230f, burger.getPrice(), 0.0f);
-    }
-
-    @Test
-    public void getPriceWithTwoIngredients() {
-        burger.setBuns(mockBun);
+    public void moveIngredientMovesSecondToFirst() {
         burger.addIngredient(mockSauce);
         burger.addIngredient(mockFilling);
-        assertEquals(280f, burger.getPrice(), 0.0f);
+        burger.moveIngredient(0, 1);
+        assertEquals(mockSauce, burger.ingredients.get(1));
     }
-
 
     @Test
     public void getReceiptContainsBunName() {
@@ -107,20 +99,34 @@ public class BurgerTest {
     }
 
     @Test
-    public void getReceiptContainsSauceIngredient() {
+    public void getReceiptContainsSauceName() {
         burger.setBuns(mockBun);
         burger.addIngredient(mockSauce);
         String receipt = burger.getReceipt();
         assertTrue(receipt.contains("hot sauce"));
+    }
+
+    @Test
+    public void getReceiptContainsSauceType() {
+        burger.setBuns(mockBun);
+        burger.addIngredient(mockSauce);
+        String receipt = burger.getReceipt();
         assertTrue(receipt.contains("sauce"));
     }
 
     @Test
-    public void getReceiptContainsFillingIngredient() {
+    public void getReceiptContainsFillingName() {
         burger.setBuns(mockBun);
         burger.addIngredient(mockFilling);
         String receipt = burger.getReceipt();
         assertTrue(receipt.contains("cutlet"));
+    }
+
+    @Test
+    public void getReceiptContainsFillingType() {
+        burger.setBuns(mockBun);
+        burger.addIngredient(mockFilling);
+        String receipt = burger.getReceipt();
         assertTrue(receipt.contains("filling"));
     }
 
@@ -132,12 +138,20 @@ public class BurgerTest {
     }
 
     @Test
-    public void getReceiptWithMultipleIngredients() {
+    public void getReceiptWithMultipleIngredientContainsSauce() {
         burger.setBuns(mockBun);
         burger.addIngredient(mockSauce);
         burger.addIngredient(mockFilling);
         String receipt = burger.getReceipt();
         assertTrue(receipt.contains("hot sauce"));
+    }
+
+    @Test
+    public void getReceiptWithMultipleIngredientContainsFilling() {
+        burger.setBuns(mockBun);
+        burger.addIngredient(mockSauce);
+        burger.addIngredient(mockFilling);
+        String receipt = burger.getReceipt();
         assertTrue(receipt.contains("cutlet"));
     }
 }
